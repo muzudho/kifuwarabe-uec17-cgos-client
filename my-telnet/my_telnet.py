@@ -31,11 +31,11 @@ async def telnet_example(host, port, connect_timeout=10.0, read_timeout=5.0):
         )
         print(f'接続成功！ {host}:{port} に接続中（ローカルエコーオン）。コマンド入力（quitで終了）：')
 
-        # 応答読む（タイムアウト付き）
-        data = await asyncio.wait_for(reader.read(1024), timeout=read_timeout)
-        print('応答:', data)
-
         while True:
+            # サーバーからの応答読む（タイムアウト付き）
+            data = await asyncio.wait_for(reader.read(1024), timeout=read_timeout)
+            print('応答:', data)
+
             # 同期input()でコマンド取得
             cmd = input("telnet> ").strip()
             if cmd.lower() in ('quit', 'exit', 'q'):
@@ -45,10 +45,6 @@ async def telnet_example(host, port, connect_timeout=10.0, read_timeout=5.0):
             # コマンド送信
             writer.write(cmd + '\n')
             await writer.drain()
-            
-            # 応答読む（タイムアウト付き）
-            data = await asyncio.wait_for(reader.read(1024), timeout=read_timeout)
-            print('応答:', data)
             
     except asyncio.TimeoutError:
         print(f'接続タイムアウト！ {connect_timeout}秒経過')
