@@ -688,6 +688,7 @@ class CGOSClient(object):
             print("(^q^) pickNewEngine 4")
             newEngine = EngineConnector(
                 newEngineConfig.getValue("CommandLine"),
+                newEngineConfig.getValue("WorkingDirectory"),
                 newEngineConfig.getValue("Name"),
                 logger="EngineConnector" + str(self._currentEngineIndex),
                 logfile=newEngineConfig.getValueOpt("LogFile")

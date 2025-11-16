@@ -66,6 +66,8 @@ class ConfigFile(object):
 
     COMMAND_LINE = "CommandLine"
 
+    WORKING_DIRECTORY = "WorkingDirectory"
+
 
     def __init__(self):
         self._sections = []
@@ -126,7 +128,8 @@ class ConfigFile(object):
                 hasEngine = True
 
                 for req in [
-                    "CommandLine",
+                    ConfigFile.COMMAND_LINE,
+                    ConfigFile.WORKING_DIRECTORY,
                     "ServerHost",
                     "ServerPort",
                     "ServerUser",

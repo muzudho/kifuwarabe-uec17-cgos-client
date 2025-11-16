@@ -242,11 +242,13 @@ class EngineConnector(object):
     def __init__(
         self,
         programCommandLine: str,
+        workingDirectory: str,
         name: str,
         logger: str = "EngineConnector",
         logfile: Optional[str] = "engine.log"
     ):
         self._programCommandLine = programCommandLine
+        self._workingDirectory = workingDirectory
         self._name = name
         self._subprocess = None
         self._supportedCommands: List[str] = []
@@ -298,7 +300,12 @@ class EngineConnector(object):
 
         # コマンドラインから［オブザーバー用GUI］の外部プロセスを起動
         self._subprocess = subprocess.Popen(
-            args, stdin=subprocess.PIPE, stdout=subprocess.PIPE, shell=False, text=True
+            args,
+            cwd=self._workingDirectory,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            shell=False,
+            text=True
         )
         time.sleep(1)
 
