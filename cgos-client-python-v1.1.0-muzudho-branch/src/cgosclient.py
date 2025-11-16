@@ -210,6 +210,7 @@ class CGOSClient(object):
         self.logger.info("Server info: " + (" ".join(parameters)))
         self._checkTimeCheckpoint()
 
+
     def _handle_protocol(self, parameters: List[str]) -> None:
         """Event handler: "protocol" command. No parameters."""
         self._useAnalyze = "genmove_analyze" in parameters
