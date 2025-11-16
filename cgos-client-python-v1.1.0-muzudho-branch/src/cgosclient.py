@@ -77,9 +77,11 @@ class CGOSClient(object):
         """
         self._engineConfigs = engineConfigurationSections
         self._engine: Optional[EngineConnector] = None  # Currently playing engine
+
         self._currentEngineIndex = (
             -1
         )  # Index in configuration sections of current engine
+        
         self._currentEngineGamesLeft = (
             0  # Number of games the current engine has left before switching
         )
@@ -479,7 +481,9 @@ class CGOSClient(object):
         self._checkKillFile()
 
         if not (self._finished):
+            self.logger.info("(^q^) cgosclient.py > _handle_gameover() 482: pickNewEngine")
             self.pickNewEngine()
+
         if not (self._finished) and not (self._engineSwitching):
             self._respond("ready")
 

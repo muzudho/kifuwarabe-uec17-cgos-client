@@ -23,3 +23,6 @@
 
 EngineConnector.connect() がまた呼ばれる？  
 接続してるのに、また接続したらダメなのでは？  
+
+`cgosclient.py > _handle_gameover() 482` で `pickNewEngine()` するから再接続するのでは？  
+何か［設定ファイル］に設定されたエンジンをローテーションしている？ `_currentEngineIndex`  
