@@ -23,6 +23,6 @@ exit()
 # Windows
 cd cgos-client-python-v1.1.0-muzudho-branch/src
 
-# GTPエンジンを、サーバーに接続します。
+# GTPエンジンを起動し、対局サーバーに接続します。
 python cgosclient.py ../kifuwarabe-uec-17.cfg
 ```

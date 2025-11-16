@@ -744,16 +744,16 @@ def main(argv: List[str]) -> bool:
 
 
 if __name__ == "__main__":
-    while True:
-        try:
+    try:
+        while True:
             expected = main(sys.argv[1:])
             if expected:
                 print("Graceful shutdown")
                 break
             else:
                 print("Error happened.")
-        except KeyboardInterrupt:
-            print("Exit by KeyboardInterrupt")
-            break
-        except Exception as e:
-            traceback.print_exc(file=sys.stderr)
+
+    except KeyboardInterrupt as e:
+        print(f"Exit by KeyboardInterrupt. {str(e)}")
+    except Exception as e:
+        traceback.print_exc(file=sys.stderr)

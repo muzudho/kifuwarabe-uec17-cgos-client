@@ -79,8 +79,12 @@ class ConfigFile(object):
         """
         self._sections = []
 
-        with open(fileName, "r", encoding="utf-8") as file:
-            lines = file.readlines()
+        try:
+            with open(fileName, "r", encoding="utf-8") as file:
+                lines = file.readlines()
+        except FileNotFoundError as e:
+            raise Exception(f"Configuraton file not found {fileName}: {str(e)}")
+        
  
         currentSection = None
 
