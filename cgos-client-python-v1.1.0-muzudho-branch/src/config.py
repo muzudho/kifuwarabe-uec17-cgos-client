@@ -83,7 +83,8 @@ class ConfigFile(object):
             with open(fileName, "r", encoding="utf-8") as file:
                 lines = file.readlines()
         except FileNotFoundError as e:
-            raise Exception(f"Configuraton file not found {fileName}: {str(e)}")
+            e.add_note(f"Configuraton file not found.")
+            raise
         
  
         currentSection = None
