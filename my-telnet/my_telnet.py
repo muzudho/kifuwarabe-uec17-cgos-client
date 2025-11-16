@@ -10,13 +10,14 @@ async def telnet_example(host, port, connect_timeout=10.0):
             timeout=connect_timeout
         )
         
-        # コマンド送信（例: 'ls'。サーバー依存で変えろ）
-        writer.write('ls\n'.encode('utf-8'))
+        # コマンド送信（str直接）
+        writer.write('ls\n')  # これで自動'utf8'エンコード
         await writer.drain()
         
-        # 応答読む（これもタイムアウト付き）
+        # 応答読む（タイムアウト付き）
         data = await asyncio.wait_for(reader.read(1024), timeout=5.0)
-        print(data.decode('utf-8'))
+        
+        print('応答:', data)
         
     except asyncio.TimeoutError:
         print(f'接続タイムアウト！ {connect_timeout}秒経過')
