@@ -35,4 +35,7 @@ who
 
 # 対局開始
 match Kifuwarabe gnugo1 1800 1800
+
+# サーバーからログアウトするとき
+quit
 ```
