@@ -4,6 +4,7 @@
 
 * ドキュメント（むずでょブランチ）
     * 📖 [ドキュメント（むずでょブランチ）](./docs/README.md)
+    * 📖 [gogui](./docs/go-gui.md)
 
 * ドキュメント（原文）
     * 📖 [Python CGOS Client（原文）](./cgos-client-python-v1.1.0/README.md)
