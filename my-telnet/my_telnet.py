@@ -30,7 +30,11 @@ async def telnet_example(host, port, connect_timeout=10.0, read_timeout=5.0):
             timeout=connect_timeout
         )
         print(f'接続成功！ {host}:{port} に接続中（ローカルエコーオン）。コマンド入力（quitで終了）：')
-        
+
+        # 応答読む（タイムアウト付き）
+        data = await asyncio.wait_for(reader.read(1024), timeout=read_timeout)
+        print('応答:', data)
+
         while True:
             # 同期input()でコマンド取得
             cmd = input("telnet> ").strip()
