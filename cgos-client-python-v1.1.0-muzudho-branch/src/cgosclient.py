@@ -596,6 +596,7 @@ class CGOSClient(object):
     def isConnected(self) -> bool:
         return self._server is not None
 
+
     def mainloop(self) -> bool:
         """
         Main loop - keep trying to connect to CGOS, with reasonable wait times. Once connected,
@@ -605,6 +606,8 @@ class CGOSClient(object):
         the loop exits. If a kill file is found (see killFileName parameter to constructor),
         an orderly shutdown is performed.
         """
+
+        print("(^q^) mainloop 1")
         assert self._server is not None
         self._finished = False
 
@@ -615,6 +618,7 @@ class CGOSClient(object):
             retries = 1
             while not (connected):
                 try:
+                    print("(^q^) mainloop 2")
                     self.connect()
                     connected = True
                 except Exception:
@@ -625,6 +629,7 @@ class CGOSClient(object):
                     retries += 1
 
             try:
+                print("(^q^) mainloop 3")
                 self._handlerloop()
             except socket.error as e:
                 self.logger.error("Socket error: " + str(e))
@@ -648,6 +653,7 @@ class CGOSClient(object):
         this throws an exception
         """
 
+        print("(^q^) pickNewEngine 1")
         if self._currentEngineIndex == -1:
             self._currentEngineIndex = 0
         elif len(self._engineConfigs) == 1:
@@ -665,9 +671,11 @@ class CGOSClient(object):
         if self._engine is not None:
             self._engine.shutdown()
 
+        print("(^q^) pickNewEngine 2")
         newEngineConfig = self._engineConfigs[self._currentEngineIndex]
         self._currentEngineGamesLeft = int(newEngineConfig.getValue("NumberOfGames"))
 
+        print("(^q^) pickNewEngine 3")
         self.logger.info(
             "Chose engine "
             + str(self._currentEngineIndex + 1)
@@ -677,19 +685,25 @@ class CGOSClient(object):
         )
 
         try:
+            print("(^q^) pickNewEngine 4")
             newEngine = EngineConnector(
                 newEngineConfig.getValue("CommandLine"),
                 newEngineConfig.getValue("Name"),
                 logger="EngineConnector" + str(self._currentEngineIndex),
                 logfile=newEngineConfig.getValueOpt("LogFile")
             )
+
+            print("(^q^) pickNewEngine 5")
             newEngine.connect()
+            
         except Exception as e:
+            print("(^q^) Error pickNewEngine 5.1")
             self.logger.error("Switch failed. Engine failed to start: " + str(e))
             raise
 
         self._engine = newEngine
 
+        print("(^q^) pickNewEngine 6")
         if newEngineConfig.hasValue("SGFDirectory"):
             self._sgfDirectory = newEngineConfig.getValue("SGFDirectory")
         else:
@@ -706,6 +720,7 @@ class CGOSClient(object):
             self._genmoveDelay = int(delay)
 
         self._engineSwitching = True
+
 
     def setObserver(self, engine) -> None:
         self._observer = engine
@@ -731,45 +746,47 @@ def main(argv: List[str]) -> bool:
         print("Usage: python cgosclient.py config.cfg")
         return True
 
-    print("(^q^) 1")
+    print("(^q^) main 1")
     # Here we go. Grab the configuration file
     config = ConfigFile()
     config.load(argv[0])
 
-    print("(^q^) 2")
+    print("(^q^) main 2")
     engineConfigs = config.getEngineSections()
     client = CGOSClient(engineConfigs,
                         config.getCommonSection().getValue("KillFile"),
                         config.getCommonSection().getValueOpt("LogFile"))
 
-    print("(^q^) 3")
+    print("(^q^) main 3")
     # Launch observer (e.g. GoGUI) if any
     observerConfig = config.getObserverSection()
     observerEngine = None
 
-    print("(^q^) 4")
-    if observerConfig is not None:
+    print("(^q^) main 4 - Observer skipped")
+    # if observerConfig is not None:
 
-        print("(^q^) 4.1")
-        observerEngine = EngineConnector(
-            observerConfig.getValue("CommandLine"),
-            "Observer",
-            logger="ObserverLogger",
-            logfile=observerConfig.getValueOpt("LogFile")
-        )
+    #     print("(^q^) 4.1")
+    #     observerEngine = EngineConnector(
+    #         observerConfig.getValue("CommandLine"),
+    #         "Observer",
+    #         logger="ObserverLogger",
+    #         logfile=observerConfig.getValueOpt("LogFile")
+    #     )
 
-        print("(^q^) 4.2")
-        observerEngine.connect(EngineConnector.MANDATORY_OBSERVE_COMMANDS)
+    #     print("(^q^) 4.2")
+    #     observerEngine.connect(EngineConnector.MANDATORY_OBSERVE_COMMANDS)
 
-        print("(^q^) 4.3")
-        client.setObserver(observerEngine)
+    #     print("(^q^) 4.3")
+    #     client.setObserver(observerEngine)
 
-    print("(^q^) 5")
     # And play until done
     try:
+        print("(^q^) main 5 - pickNewEngine")
         client.pickNewEngine()
+        print("(^q^) main 6")
         return client.mainloop()
     finally:
+        print("(^q^) Error main 6.1")
         client.shutdown()
         if observerEngine is not None:
             observerEngine.shutdown()
