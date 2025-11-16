@@ -4,10 +4,10 @@ This client connects Go programs that implement the [GTP](http://www.lysator.liu
 protocol to the	[Computer Go Server](http://www.yss-aya.com/cgos/) (CGOS). If you downloaded this, you know what they are.
 *Any* GTP engine is supported, not just those written in Python.
 
+
 ## Information
 
 This is version **1.0.0**.  
-
 
 Original CGOS Python client was developed by &copy;2009 Christian Nentwich and [contributors](contributors.html)  
 and is licensed to you under the terms of the  
@@ -36,7 +36,9 @@ The CGOS server and TCL client are &copy; Don Daily and others and are not inclu
 		* [Alternating Between Multiple Engines](#multipleengines)
 		* [Sample Configuration](#samplecfg)
 
+
 <a name="features"></a>
+
 ## Features
 
 Features in common with standard CGOS TCL client:  
@@ -63,6 +65,7 @@ Features not yet supported:
 
 
 <a name="usage"></a>
+
 # Usage
 
 Developed on Python 3.10, no extensions required. It may work on Python 2.5, but that is not tested. If you are using Windows,  
@@ -87,6 +90,7 @@ a game. In practice, this means when the next status message is received by the 
 
 
 <a name="gtp"></a>
+
 ## GTP Commands
 
 *Playing* engines need the following GTP commands:  
@@ -115,6 +119,7 @@ you can infer the following:
 
 
 <a name="ext"></a>
+
 ## GTP Extensions
 
 The following GTP extensions are available. If your engine records its own logs, or writes its own  
@@ -128,6 +133,7 @@ SGF records with analysis information in them, you may find them useful.
 
 
 <a name="logging"></a>
+
 ## Logging
 
 The client will produce the following log files at debug level - standard output stream  
@@ -142,6 +148,7 @@ and so on, when they get beyond 2MB. A maximum of 5 rolling log files is kept.
 
 
 <a name="observer"></a>
+
 ## Displaying Games Using GoGUI
 
 The Python CGOS client can stream the GTP command stream to a secondary engine called  
@@ -153,7 +160,7 @@ an "observer" engine. It is up to you how you use this, for example:
   and b) you save the server a bit of work.
 
 First, download GoGUI from [gogui.sourceforge.net](http://gogui.sourceforge.net/).  
-Next, make sure you use <code>gogui-display</code> as an observer in your configuration file,  
+Next, make sure you use `gogui-display` as an observer in your configuration file,  
 like so in Windows:  
 
 ```
@@ -174,7 +181,9 @@ engine crashed and terminate your connection. You will then have to restart to r
 If you wish to stop displaying, put a kill file in place (see above), then start the client  
 again without an observer.  
 
+
 <a name="multipleengines"></a>
+
 ## Alternating Between Multiple Engines
 
 In the [configuration file](#samplecfg), each GTP engine has an attribute called  
@@ -206,6 +215,7 @@ Recommendations:
 
 
 <a name="samplecfg"></a>
+
 ## Sample Configuration
 
 This sample configuration shows how [GNU Go](http://www.gnu.org/software/gnugo/)  

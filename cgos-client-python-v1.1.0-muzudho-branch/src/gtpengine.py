@@ -275,6 +275,7 @@ class EngineConnector(object):
     def __del__(self):
         self.shutdown()
 
+
     def connect(self, mandatoryCommands=MANDATORY_PLAYING_COMMANDS):
         """
         Launch the GTP engine as a sub-process. Will throw an EngineConnectorError if
@@ -284,15 +285,20 @@ class EngineConnector(object):
         self.logger.info(
             "Starting GTP engine, command line: " + self._programCommandLine
         )
+
         if sys.platform == "win32":
             args = self._programCommandLine
         else:
             args = self._programCommandLine.split()
+
+        # コマンドラインから［オブザーバー用GUI］の外部プロセスを起動
         self._subprocess = subprocess.Popen(
             args, stdin=subprocess.PIPE, stdout=subprocess.PIPE, shell=False, text=True
         )
         time.sleep(1)
+
         self._findSupportedCommands(mandatoryCommands)
+
 
     def getName(self):
         return self._name
@@ -468,6 +474,7 @@ class EngineConnector(object):
         if "cgos-gameover" in self._supportedCommands:
             self._sendNoResponseCommand("cgos-gameover " + result)
 
+
     def _findSupportedCommands(self, mandatoryCommands):
         """
         Fill the _supportedCommands list with GTP commands. All commands in
@@ -480,6 +487,7 @@ class EngineConnector(object):
                 raise EngineConnectorError(
                     "Mandatory GTP command not implemented: " + cmd
                 )
+
 
     def _sendNoResponseCommand(self, commandString):
         """

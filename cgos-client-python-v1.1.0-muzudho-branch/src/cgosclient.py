@@ -742,20 +742,29 @@ def main(argv: List[str]) -> bool:
                         config.getCommonSection().getValue("KillFile"),
                         config.getCommonSection().getValueOpt("LogFile"))
 
+    print("(^q^) 3")
     # Launch observer (e.g. GoGUI) if any
     observerConfig = config.getObserverSection()
     observerEngine = None
 
+    print("(^q^) 4")
     if observerConfig is not None:
+
+        print("(^q^) 4.1")
         observerEngine = EngineConnector(
             observerConfig.getValue("CommandLine"),
             "Observer",
             logger="ObserverLogger",
             logfile=observerConfig.getValueOpt("LogFile")
         )
+
+        print("(^q^) 4.2")
         observerEngine.connect(EngineConnector.MANDATORY_OBSERVE_COMMANDS)
+
+        print("(^q^) 4.3")
         client.setObserver(observerEngine)
 
+    print("(^q^) 5")
     # And play until done
     try:
         client.pickNewEngine()
