@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import json
 import logging
-import logging.handlers
+#import logging.handlers
 import os
 import subprocess
 import sys
@@ -253,6 +253,7 @@ class EngineConnector(object):
         self._subprocess = None
         self._supportedCommands: List[str] = []
 
+        print("(^q^) EngineConnector __init__ > logging設定")
         self.logger = logging.getLogger(logger)
         self.logger.setLevel(logging.DEBUG)
 
@@ -289,9 +290,7 @@ class EngineConnector(object):
         this fails. This will also use GTP list_commands to check the capabilities of the
         engine.
         """
-        self.logger.info(
-            "Starting GTP engine, command line: " + self._programCommandLine
-        )
+        self.logger.info(f"Starting GTP engine, command line: {self._programCommandLine}")
 
         if sys.platform == "win32":
             args = self._programCommandLine

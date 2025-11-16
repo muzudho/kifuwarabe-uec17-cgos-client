@@ -121,6 +121,7 @@ class CGOSClient(object):
 
         self._useAnalyze = False
 
+        print("(^q^) CGOSClient __init__ > logging設定")
         self.logger = logging.getLogger("cgosclient.CGOSClient")
         self.logger.setLevel(logging.DEBUG)
 
@@ -255,6 +256,9 @@ class CGOSClient(object):
 
         Example: setup 1 19 7.5 1800000 programA(1800?) programB(1800?) E5 1700000 H3 1600000
         """
+
+        print("(^q^) _handle_setup 1")
+
         if len(parameters) < 6:
             raise CGOSClientError("'setup' command requires at least 6 parameters")
         assert self._engine is not None
@@ -584,13 +588,18 @@ class CGOSClient(object):
         self._finished = False
 
         while not (self._finished):
+            print("(^q^) mainloop 1")
             self._engineSwitching = False
 
             connected = False
             retries = 1
             while not (connected):
+                print("(^q^) mainloop 2")
                 try:
+                    self.logger.info("(^q^) cgosclient.py > mainloop() 599: 接続")
                     self.connect()
+
+                    print("(^q^) mainloop 2.1")
                     connected = True
                 except Exception:
                     self.logger.error(
@@ -599,6 +608,7 @@ class CGOSClient(object):
                     time.sleep(30 + int(random.random() * 5))
                     retries += 1
 
+            print("(^q^) mainloop 3")
             try:
                 self._handlerloop()
             except socket.error as e:
@@ -611,11 +621,13 @@ class CGOSClient(object):
                 self.logger.error(f"GTP engine error: {e}")
                 return False
 
+        print("(^q^) mainloop 4")
         self._respond("quit")
         if os.path.exists(self._killFileName):
             os.remove(self._killFileName)
             return True
         return False
+
 
     def pickNewEngine(self) -> None:
         """
@@ -646,6 +658,7 @@ class CGOSClient(object):
         self.logger.info(f"Chose engine {self._currentEngineIndex + 1} (\"{newEngineConfig.getValue('Name')}\") as next player. Switching and re-connecting.")
 
         try:
+            self.logger.info("(^q^) cgosclient.py > pickNewEngine(): ニューエンジン生成")
             newEngine = EngineConnector(
                 newEngineConfig.getValue("CommandLine"),
                 newEngineConfig.getValue("WorkingDirectory"),
@@ -654,6 +667,7 @@ class CGOSClient(object):
                 logfile=newEngineConfig.getValueOpt("LogFile")
             )
 
+            self.logger.info("(^q^) cgosclient.py > pickNewEngine() 670: 接続")
             newEngine.connect()
             
         except Exception as e:
