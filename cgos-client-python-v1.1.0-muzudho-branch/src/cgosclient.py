@@ -21,7 +21,7 @@ import sys
 import traceback
 import time
 import logging
-import logging.handlers
+#import logging.handlers
 import os
 import os.path
 import string
@@ -62,9 +62,13 @@ class CGOSClient(object):
     __TIME_CHECKPOINT_FREQUENCY = 60 * 30
     """ How often to output stats, etc., in seconds """
 
-    def __init__(self, engineConfigurationSections: List[ConfigSection],
-                 killFileName: str = "kill.txt",
-                 logFileName: Optional[str] = None) -> None:
+
+    def __init__(
+            self,
+            engineConfigurationSections: List[ConfigSection],
+            killFileName: str = "kill.txt",
+            logFileName: Optional[str] = None
+    ) -> None:
         """
         Initialise the client, without connecting anything yet
           - engineConfigurationSections is a list of ConfigSection objects containing
@@ -167,6 +171,7 @@ class CGOSClient(object):
 
         self.logger.info("Connected")
 
+
     def disconnect(self) -> None:
         self.logger.info("Disconnecting")
         if self._socketfile is not None:
@@ -198,12 +203,14 @@ class CGOSClient(object):
     #
     #        return chosenEngineIndex
 
+
     def _respond(self, message: str) -> None:
         assert self._socketfile is not None
         if self._socket is not None:
             self.logger.debug("Responding: " + message)
             self._socketfile.write(message + "\n")
             self._socketfile.flush()
+
 
     def _handle_info(self, parameters: List[str]) -> None:
         """Event handler: "info". Ignored."""
@@ -225,10 +232,12 @@ class CGOSClient(object):
         assert self._username is not None
         self._respond(self._username)
 
+
     def _handle_password(self, parameters) -> None:
         """Event handler: "password" command. No parameters."""
         assert self._password is not None
         self._respond(self._password)
+
 
     def _handle_setup(self, parameters) -> None:
         """
@@ -285,26 +294,10 @@ class CGOSClient(object):
             engineRank = programARank
             self._engineColour = "white"
 
-        self.logger.info(
-            "Starting game against "
-            + opponent
-            + "("
-            + opponentRank
-            + '). Local engine ("'
-            + self._engine.getName()
-            + '", rated '
-            + engineRank
-            + ") is playing "
-            + self._engineColour
-            + "."
-        )
+        self.logger.info(f'Starting game against {opponent}({opponentRank}). Local engine ("{self._engine.getName()}", rated {engineRank}) is playing {self._engineColour}.')
 
         if len(parameters) > 6:
-            self.logger.info(
-                "This is a restart. Catching up "
-                + str((len(parameters) - 6) // 2)
-                + " moves"
-            )
+            self.logger.info(f"This is a restart. Catching up {str((len(parameters) - 6) // 2)} moves")
 
         # Set up the engine through GTP. Also observer, if registered
         self._movecount = 0
@@ -388,18 +381,7 @@ class CGOSClient(object):
 
         self._movecount += 1
         if self._movecount % 10 == 0:
-            self.logger.info(
-                'Engine "'
-                + self._engine.getName()
-                + '" playing '
-                + self._engineColour
-                + ". "
-                + str(self._movecount)
-                + " moves generated. "
-                + "Time left: "
-                + str(int(parameters[1]) // 1000)
-                + " sec"
-            )
+            self.logger.info(f'Engine "{self._engine.getName()}" playing {self._engineColour}. {str(self._movecount)} moves generated. Time left: {str(int(parameters[1]) // 1000)} sec')
 
         colour = parameters[0]
         timeMSec = int(parameters[1])
@@ -444,7 +426,7 @@ class CGOSClient(object):
         assert self._engine is not None
         assert self._sgfGame is not None
         result = parameters[1]
-        self.logger.info("Game over. Result: " + result)
+        self.logger.info(f"Game over. Result: {result}")
 
         if self._engineColour[0] == result.lower()[0]:
             self.logger.info("Local engine won :-)")
@@ -483,8 +465,8 @@ class CGOSClient(object):
             blackName = "".join(ch for ch in self._sgfGame.getBlack() if ch in ascii)
             whiteName = "".join(ch for ch in self._sgfGame.getWhite() if ch in ascii)
 
-            fileName = fileName + "-" + blackName + "-" + whiteName + ".sgf"
-            self.logger.info("Saving SGF file: " + fileName)
+            fileName = f"{fileName}-{blackName}-{whiteName}.sgf"
+            self.logger.info(f"Saving SGF file: {fileName}")
 
             self._sgfGame.save(os.path.join(self._sgfDirectory, fileName))
 
@@ -520,26 +502,26 @@ class CGOSClient(object):
 
             line = line.strip()
 
-            self.logger.debug("Server sent: " + line)
+            self.logger.debug(f"Server sent: {line}")
 
             if len(line) == 0:
                 self.logger.debug("Empty line received from CGOS server")
                 continue
 
             if line.startswith("Error:"):
-                self.logger.error("CGOS Error: " + line[6:])
+                self.logger.error(f"CGOS Error: {line[6:]}")
                 self._finished = True
                 return
 
             splitline = line.split(None, 1)
 
-            commandHandler = "_handle_" + splitline[0]
+            commandHandler = f"_handle_{splitline[0]}"
 
             try:
                 handler = getattr(self, commandHandler)
             except AttributeError:
-                self.logger.error("Unsupported CGOS command, '" + splitline[0] + "'")
-                raise CGOSClientError("Unsupported command: " + splitline[0])
+                self.logger.error(f"Unsupported CGOS command, '{splitline[0]}'")
+                raise CGOSClientError(f"Unsupported command: {splitline[0]}")
             else:
                 parameters = []
                 if len(splitline) > 1:
@@ -581,20 +563,8 @@ class CGOSClient(object):
             self._timeCheckPoint = time.localtime()
 
             duration = currentTime - time.mktime(self._timeStarted)
-            self.logger.info(
-                "Client up for "
-                + str(int(duration) // 3600)
-                + " hours, "
-                + str((int(duration) // 60) % 60)
-                + " mins, "
-                + str(int(duration) % 60)
-                + " seconds. "
-                + "Local engines won "
-                + str(self._wonGames)
-                + " games, lost "
-                + str(self._lostGames)
-                + "."
-            )
+            self.logger.info(f"Client up for {int(duration) // 3600} hours, {(int(duration) // 60) % 60} mins, {int(duration) % 60} seconds. Local engines won {self._wonGames} games, lost {self._lostGames}.")
+
 
     def isConnected(self) -> bool:
         return self._server is not None
@@ -610,7 +580,6 @@ class CGOSClient(object):
         an orderly shutdown is performed.
         """
 
-        print("(^q^) mainloop 1")
         assert self._server is not None
         self._finished = False
 
@@ -621,27 +590,25 @@ class CGOSClient(object):
             retries = 1
             while not (connected):
                 try:
-                    print("(^q^) mainloop 2")
                     self.connect()
                     connected = True
                 except Exception:
                     self.logger.error(
-                        "Could not connect to " + self._server + ". Will try again."
+                        f"Could not connect to {self._server}. Will try again."
                     )
                     time.sleep(30 + int(random.random() * 5))
                     retries += 1
 
             try:
-                print("(^q^) mainloop 3")
                 self._handlerloop()
             except socket.error as e:
-                self.logger.error("Socket error: " + str(e))
+                self.logger.error(f"Socket error: {e}")
                 self.disconnect()
             except CGOSClientError as e:
                 self.logger.error(str(e))
                 return False
             except EngineConnectorError as e:
-                self.logger.error("GTP engine error: " + str(e))
+                self.logger.error(f"GTP engine error: {e}")
                 return False
 
         self._respond("quit")
@@ -656,7 +623,6 @@ class CGOSClient(object):
         this throws an exception
         """
 
-        print("(^q^) pickNewEngine 1")
         if self._currentEngineIndex == -1:
             self._currentEngineIndex = 0
         elif len(self._engineConfigs) == 1:
@@ -674,40 +640,28 @@ class CGOSClient(object):
         if self._engine is not None:
             self._engine.shutdown()
 
-        print("(^q^) pickNewEngine 2")
         newEngineConfig = self._engineConfigs[self._currentEngineIndex]
         self._currentEngineGamesLeft = int(newEngineConfig.getValue("NumberOfGames"))
 
-        print("(^q^) pickNewEngine 3")
-        self.logger.info(
-            "Chose engine "
-            + str(self._currentEngineIndex + 1)
-            + ' ("'
-            + newEngineConfig.getValue("Name")
-            + '") as next player. Switching and re-connecting.'
-        )
+        self.logger.info(f"Chose engine {self._currentEngineIndex + 1} (\"{newEngineConfig.getValue('Name')}\") as next player. Switching and re-connecting.")
 
         try:
-            print("(^q^) pickNewEngine 4")
             newEngine = EngineConnector(
                 newEngineConfig.getValue("CommandLine"),
                 newEngineConfig.getValue("WorkingDirectory"),
                 newEngineConfig.getValue("Name"),
-                logger="EngineConnector" + str(self._currentEngineIndex),
+                logger=f"EngineConnector{self._currentEngineIndex}",
                 logfile=newEngineConfig.getValueOpt("LogFile")
             )
 
-            print("(^q^) pickNewEngine 5")
             newEngine.connect()
             
         except Exception as e:
-            print("(^q^) Error pickNewEngine 5.1")
-            self.logger.error("Switch failed. Engine failed to start: " + str(e))
+            self.logger.error(f"Switch failed. Engine failed to start: {e}")
             raise
 
         self._engine = newEngine
 
-        print("(^q^) pickNewEngine 6")
         if newEngineConfig.hasValue("SGFDirectory"):
             self._sgfDirectory = newEngineConfig.getValue("SGFDirectory")
         else:
@@ -729,9 +683,11 @@ class CGOSClient(object):
     def setObserver(self, engine) -> None:
         self._observer = engine
 
+
     def setSGFDirectory(self, dir) -> None:
         self._sgfDirectory = dir
-        self.logger.info("SGF files will be saved in: " + dir)
+        self.logger.info(f"SGF files will be saved in: {dir}")
+
 
     def shutdown(self) -> None:
         self.logger.info("Shutting down CGOS connection")
@@ -745,52 +701,43 @@ class CGOSClient(object):
 
 
 def main(argv: List[str]) -> bool:
-    print("Python CGOS client. " + CGOSClient.CLIENT_ID + " (c)2009 Christian Nentwich, (c)2025 Muzudho")
+    print(f"Python CGOS client. {CGOSClient.CLIENT_ID} (c)2009 Christian Nentwich, (c)2025 Muzudho")
     if len(argv) != 1:
         print("Usage: python cgosclient.py config.cfg")
         return True
 
-    print("(^q^) main 1")
     # Here we go. Grab the configuration file
     config = ConfigFile()
     config.load(argv[0])
 
-    print("(^q^) main 2")
     engineConfigs = config.getEngineSections()
     client = CGOSClient(engineConfigs,
                         config.getCommonSection().getValue("KillFile"),
                         config.getCommonSection().getValueOpt("LogFile"))
 
-    print("(^q^) main 3")
     # Launch observer (e.g. GoGUI) if any
     observerConfig = config.getObserverSection()
     observerEngine = None
 
-    print("(^q^) main 4 - Observer skipped")
+    print("(^q^) main - Observer skipped")
     # if observerConfig is not None:
-
-    #     print("(^q^) 4.1")
+    #
     #     observerEngine = EngineConnector(
     #         observerConfig.getValue("CommandLine"),
     #         "Observer",
     #         logger="ObserverLogger",
     #         logfile=observerConfig.getValueOpt("LogFile")
     #     )
-
-    #     print("(^q^) 4.2")
+    #
     #     observerEngine.connect(EngineConnector.MANDATORY_OBSERVE_COMMANDS)
-
-    #     print("(^q^) 4.3")
+    #
     #     client.setObserver(observerEngine)
 
     # And play until done
     try:
-        print("(^q^) main 5 - pickNewEngine")
         client.pickNewEngine()
-        print("(^q^) main 6")
         return client.mainloop()
     finally:
-        print("(^q^) Error main 6.1")
         client.shutdown()
         if observerEngine is not None:
             observerEngine.shutdown()
