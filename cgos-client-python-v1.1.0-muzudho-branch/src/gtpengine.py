@@ -238,9 +238,13 @@ class EngineConnector(object):
     MANDATORY_OBSERVE_COMMANDS = ["boardsize", "clear_board", "komi", "play", "quit"]
     """ Mandatory commands for an engine that can observe a game (like GoGUI). """
 
+
     def __init__(
-        self, programCommandLine: str, name: str,
-        logger: str = "EngineConnector", logfile: Optional[str] = "engine.log"
+        self,
+        programCommandLine: str,
+        name: str,
+        logger: str = "EngineConnector",
+        logfile: Optional[str] = "engine.log"
     ):
         self._programCommandLine = programCommandLine
         self._name = name
@@ -257,7 +261,7 @@ class EngineConnector(object):
 
             if logfile is not None:
                 os.makedirs(os.path.dirname(logfile), exist_ok=True)
-                self.handler = logging.FileHandler(logfile)
+                self.handler = logging.FileHandler(logfile, encoding='utf-8')
                 self.handler.setLevel(logging.DEBUG)
                 self.handler.setFormatter(self.formatter)
 
@@ -271,6 +275,7 @@ class EngineConnector(object):
             handler.setFormatter(formatter)
 
             self.logger.addHandler(handler)
+
 
     def __del__(self):
         self.shutdown()
