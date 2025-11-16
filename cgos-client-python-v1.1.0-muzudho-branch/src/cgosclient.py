@@ -143,7 +143,9 @@ class CGOSClient(object):
 
         self.logger.addHandler(handler)
 
+
     def connect(self) -> None:
+        """ Connect to the CGOS server. """
         assert self._server is not None
         self.logger.info(
             "Attempting to connect to server '"
