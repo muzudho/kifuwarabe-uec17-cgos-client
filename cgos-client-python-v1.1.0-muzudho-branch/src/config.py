@@ -66,8 +66,10 @@ class ConfigFile(object):
 
     COMMAND_LINE = "CommandLine"
 
+
     def __init__(self):
         self._sections = []
+
 
     def load(self, fileName):
         """
@@ -75,10 +77,9 @@ class ConfigFile(object):
         """
         self._sections = []
 
-        file = open(fileName, "r")
-        lines = file.readlines()
-        file.close()
-
+        with open(fileName, "r", encoding="utf-8") as file:
+            lines = file.readlines()
+ 
         currentSection = None
 
         for line in lines:
@@ -96,11 +97,14 @@ class ConfigFile(object):
 
         self._validate()
 
+
     def getCommonSection(self) -> ConfigSection:
         return [x for x in self._sections if x.name() == ConfigFile.COMMON_SECTION][0]
 
+
     def getEngineSections(self) -> List[ConfigSection]:
         return [x for x in self._sections if x.name() == ConfigFile.ENGINE_SECTION]
+
 
     def getObserverSection(self) -> Optional[ConfigSection]:
         result = [x for x in self._sections if x.name() == ConfigFile.OBSERVER_SECTION]
@@ -108,8 +112,10 @@ class ConfigFile(object):
             return result[0]
         return None
 
+
     def sections(self) -> List[ConfigSection]:
         return self._sections
+
 
     def _validate(self):
         hasEngine = False

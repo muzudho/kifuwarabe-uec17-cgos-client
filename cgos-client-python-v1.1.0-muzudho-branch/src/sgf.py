@@ -123,57 +123,53 @@ class SGFGame(object):
         return {Colour.WHITE: "W", Colour.BLACK: "B"}[colour]
 
     def save(self, fileName):
-        file = open(fileName, "w")
-
-        file.write("(\n")
-        file.write(";GM[1]FF[3]AP[cgos-python]\n")
-        file.write(
-            "RU[NZ]SZ[" + str(self._boardsize) + "]HA[0]KM[" + str(self._komi) + "]\n"
-        )
-        file.write("PW[" + self._white + "]\n")
-        file.write("PB[" + self._black + "]\n")
-        file.write("TM[" + str(self._time) + "]\n")
-
-        if self._blackRank is not None and self._whiteRank is not None:
-            file.write(
-                "GN["
-                + self._black
-                + " ("
-                + self._blackRank
-                + ") vs. "
-                + self._white
-                + " ("
-                + self._whiteRank
-                + ")]\n"
-            )
-
-        if self._result is not None:
-            file.write("RE[" + self._result + "]\n")
-
-        if len(self._moves) > 0:
+        with open(fileName, "w", encoding="utf-8") as file:
             file.write("(\n")
+            file.write(";GM[1]FF[3]AP[cgos-python]\n")
+            file.write(
+                "RU[NZ]SZ[" + str(self._boardsize) + "]HA[0]KM[" + str(self._komi) + "]\n"
+            )
+            file.write("PW[" + self._white + "]\n")
+            file.write("PB[" + self._black + "]\n")
+            file.write("TM[" + str(self._time) + "]\n")
 
-            for move in self._moves:
-                sgfColour = self._sgfColour(move.colour())
+            if self._blackRank is not None and self._whiteRank is not None:
+                file.write(
+                    "GN["
+                    + self._black
+                    + " ("
+                    + self._blackRank
+                    + ") vs. "
+                    + self._white
+                    + " ("
+                    + self._whiteRank
+                    + ")]\n"
+                )
 
-                if move.isPass():
-                    file.write(";" + sgfColour + "[]")
-                else:
-                    sgfCoord = (
-                        SGFGame.__COORD_LETTERS[move.x() - 1]
-                        + SGFGame.__COORD_LETTERS[self._boardsize - move.y()]
-                    )
-                    file.write(";" + sgfColour + "[" + sgfCoord + "]")
+            if self._result is not None:
+                file.write("RE[" + self._result + "]\n")
 
-                if move.timeleft() is not None:
-                    file.write(sgfColour + "L[" + str(move.timeleft()) + "]")
+            if len(self._moves) > 0:
+                file.write("(\n")
+
+                for move in self._moves:
+                    sgfColour = self._sgfColour(move.colour())
+
+                    if move.isPass():
+                        file.write(";" + sgfColour + "[]")
+                    else:
+                        sgfCoord = (
+                            SGFGame.__COORD_LETTERS[move.x() - 1]
+                            + SGFGame.__COORD_LETTERS[self._boardsize - move.y()]
+                        )
+                        file.write(";" + sgfColour + "[" + sgfCoord + "]")
+
+                    if move.timeleft() is not None:
+                        file.write(sgfColour + "L[" + str(move.timeleft()) + "]")
+
+                file.write(")\n")
 
             file.write(")\n")
-
-        file.write(")\n")
-
-        file.flush()
-        file.close()
 
 
 def main():

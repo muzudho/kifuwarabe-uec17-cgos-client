@@ -726,15 +726,17 @@ class CGOSClient(object):
 
 
 def main(argv: List[str]) -> bool:
-    print("Python CGOS client. " + CGOSClient.CLIENT_ID + " (c)2009 Christian Nentwich")
+    print("Python CGOS client. " + CGOSClient.CLIENT_ID + " (c)2009 Christian Nentwich, (c)2025 Muzudho")
     if len(argv) != 1:
         print("Usage: python cgosclient.py config.cfg")
         return True
 
+    print("(^q^) 1")
     # Here we go. Grab the configuration file
     config = ConfigFile()
     config.load(argv[0])
 
+    print("(^q^) 2")
     engineConfigs = config.getEngineSections()
     client = CGOSClient(engineConfigs,
                         config.getCommonSection().getValue("KillFile"),
