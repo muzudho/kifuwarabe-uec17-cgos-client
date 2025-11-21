@@ -26,3 +26,8 @@ cd cgos-client-python-v1.1.0-muzudho-branch/src
 # GTPエンジンを起動し、対局サーバーに接続します。
 python cgosclient.py ../kifuwarabe-uec-17.cfg
 ```
+
+
+## 大会に持っていくなら
+
+📄 `bin/go-to-championship.bat` スクリプト・ファイルをダブルクリックするか、このファイルの中のコメントを読んでください。  
