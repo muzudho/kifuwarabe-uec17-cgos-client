@@ -6,7 +6,8 @@
 
 * ドキュメント（むずでょブランチ）
     * 📖 [ドキュメント（むずでょブランチ）](./docs/README.md)
-    * 📖 [gogui](./docs/go-gui.md)
+    * 📖 [gogui](./docs/go-gui.md) - 使わなかった
+    * 📖 [第１７回ＵＥＣ杯コンピュータ囲碁大会　＞　テストマッチの方法](./docs/uec-cup-test-match.md)
 
 * ドキュメント（原文）
     * 📖 [Python CGOS Client（原文）](./cgos-client-python-v1.1.0/README.md)
