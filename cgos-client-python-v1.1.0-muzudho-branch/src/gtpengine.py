@@ -253,7 +253,7 @@ class EngineConnector(object):
         self._subprocess = None
         self._supportedCommands: List[str] = []
 
-        print("(^q^) EngineConnector __init__ > logging設定")
+        #print("(^q^) EngineConnector __init__ > logging設定")
         self.logger = logging.getLogger(logger)
         self.logger.setLevel(logging.DEBUG)
 
