@@ -16,10 +16,10 @@ rem     /E サブディレクトリ（空のディレクトリーも含める）
 rem     /I コピー先がフォルダーの場合に確認しないオプション。
 xcopy /E /I cgos-client-python-v1.1.0-muzudho-branch go-to-championship\cgos-client-gtp\cgos-client-python-v1.1.0-muzudho-branch
 
-rem プロジェクト・ルートにある 📁 `my-telnet` フォルダーを、さきほど作った 📁 `go-to-championship/cgos-client-gtp` フォルダーにコピーします。
+rem プロジェクト・ルートにある 📁 `my-telnet` フォルダーを、さきほど作った 📁 `go-to-championship` フォルダーにコピーします。
 rem     /E サブディレクトリ（空のディレクトリーも含める）コピーするオプション。
 rem     /I コピー先がフォルダーの場合に確認しないオプション。
-xcopy /E /I my-telnet go-to-championship\cgos-client-gtp\my-telnet
+xcopy /E /I my-telnet go-to-championship\my-telnet
 
 echo コピー完了！
 
